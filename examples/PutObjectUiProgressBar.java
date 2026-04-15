@@ -21,11 +21,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.ProgressMonitorInputStream;
@@ -35,18 +34,15 @@ public class PutObjectUiProgressBar extends JFrame {
 
   private static final long serialVersionUID = 1L;
   private static final String defaultFileName = "/etc/issue";
-  private JButton button;
+  private JButton button = null;
 
-  PutObjectUiProgressBar() {
-    button = new JButton("Click here to upload !");
-    ButtonActionListener bal = new ButtonActionListener();
-    button.addActionListener(bal);
-
-    this.getContentPane().add(button);
-  }
+  PutObjectUiProgressBar() {}
 
   /** go() implements a blocking UI frame. */
   public void go() {
+    button = new JButton("Click here to upload!");
+    button.addActionListener(new ButtonActionListener());
+    this.getContentPane().add(button);
 
     this.setLocationRelativeTo(null);
     this.setVisible(true);
@@ -55,12 +51,11 @@ public class PutObjectUiProgressBar extends JFrame {
   }
 
   /**
-   * uploadFile(fileName) uploads to configured object storage upon reading a local file, while
+   * uploadFile(filename) uploads to configured object storage upon reading a local file, while
    * asynchronously updating the progress bar UI as well. This function is involed when user clicks
    * on the UI
    */
-  private void uploadFile(String fileName)
-      throws IOException, NoSuchAlgorithmException, InvalidKeyException, MinioException {
+  private void uploadFile(String filename) throws MinioException {
     /* play.min.io for test and development. */
     MinioClient minioClient =
         MinioClient.builder()
@@ -75,17 +70,18 @@ public class PutObjectUiProgressBar extends JFrame {
     //         .credentials("YOUR-ACCESSKEY", "YOUR-SECRETACCESSKEY")
     //         .build();
 
-    File file = new File(fileName);
-    try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+    File file = new File(filename);
+    try (BufferedInputStream bis =
+        new BufferedInputStream(Files.newInputStream(Paths.get(filename)))) {
       ProgressMonitorInputStream pmis =
           new ProgressMonitorInputStream(this, "Uploading... " + file.getAbsolutePath(), bis);
 
       pmis.getProgressMonitor().setMillisToPopup(10);
       minioClient.putObject(
-          PutObjectArgs.builder().bucket("bank").object("my-objectname").stream(
-                  pmis, pmis.available(), -1)
+          PutObjectArgs.builder().bucket("bank").object("my-object").stream(
+                  pmis, (long) pmis.available(), null)
               .build());
-      System.out.println("my-objectname is uploaded successfully");
+      System.out.println("my-object is uploaded successfully");
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -97,7 +93,6 @@ public class PutObjectUiProgressBar extends JFrame {
 
   /** Internal class extends button listener, adds methods to initiate upload operation. */
   private class ButtonActionListener implements ActionListener {
-
     @Override
     public void actionPerformed(ActionEvent e) {
 

@@ -16,53 +16,66 @@
 
 package io.minio.messages;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 
 /**
- * Object representation of request XML of <a
+ * Request XML of <a
  * href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_SelectObjectContent.html">SelectObjectContent
  * API</a>.
  */
 @Root(name = "SelectObjectContentRequest")
 @Namespace(reference = "http://s3.amazonaws.com/doc/2006-03-01/")
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "URF_UNREAD_FIELD")
-public class SelectObjectContentRequest {
-  @Element(name = "Expression")
-  private String expression;
-
-  @Element(name = "ExpressionType")
-  private String expressionType = "SQL";
-
+public class SelectObjectContentRequest extends BaseSelectParameters {
   @Element(name = "RequestProgress", required = false)
   private RequestProgress requestProgress;
-
-  @Element(name = "InputSerialization")
-  private InputSerialization inputSerialization;
-
-  @Element(name = "OutputSerialization")
-  private OutputSerialization outputSerialization;
 
   @Element(name = "ScanRange", required = false)
   private ScanRange scanRange;
 
-  /** Constructs new SelectObjectContentRequest object for given parameters. */
   public SelectObjectContentRequest(
-      String expression,
+      @Nonnull String expression,
       boolean requestProgress,
-      InputSerialization is,
-      OutputSerialization os,
-      Long scanStartRange,
-      Long scanEndRange) {
-    this.expression = expression;
+      @Nonnull InputSerialization is,
+      @Nonnull OutputSerialization os,
+      @Nullable Long scanStartRange,
+      @Nullable Long scanEndRange) {
+    super(expression, is, os);
     if (requestProgress) {
       this.requestProgress = new RequestProgress();
     }
-    this.inputSerialization = is;
-    this.outputSerialization = os;
     if (scanStartRange != null || scanEndRange != null) {
       this.scanRange = new ScanRange(scanStartRange, scanEndRange);
+    }
+  }
+
+  /** Request progress information of {@link SelectObjectContentRequest}. */
+  @Root(name = "RequestProgress", strict = false)
+  @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "URF_UNREAD_FIELD")
+  public static class RequestProgress {
+    @Element(name = "Enabled")
+    private boolean enabled = true;
+
+    public RequestProgress() {}
+  }
+
+  /** Scan range information of {@link SelectObjectContentRequest}. */
+  @Root(name = "ScanRange")
+  @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "URF_UNREAD_FIELD")
+  public static class ScanRange {
+    @Element(name = "Start", required = false)
+    private Long start;
+
+    @Element(name = "End", required = false)
+    private Long end;
+
+    public ScanRange(Long start, Long end) {
+      this.start = start;
+      this.end = end;
     }
   }
 }
