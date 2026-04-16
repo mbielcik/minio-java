@@ -634,7 +634,7 @@ public class TestMinioClient extends TestArgs {
 
     testThreadedPutObject();
 
-    if (!isSecureEndpoint) return;
+    if (!isSecureEndpoint || skipSseTests) return;
 
     testPutObject(
         "[SSE-C single upload]",
@@ -781,7 +781,7 @@ public class TestMinioClient extends TestArgs {
     builder = builder.stream(new ContentInputStream(1024), 1024L, null);
     testStatObject("[SSE-S3]", builder.sse(SSE_S3).build(), stat);
 
-    if (!isSecureEndpoint) {
+    if (!isSecureEndpoint || skipSseTests) {
       mintIgnoredLog(methodName, "[SSE-C]", System.currentTimeMillis());
       return;
     }
@@ -925,7 +925,7 @@ public class TestMinioClient extends TestArgs {
         0,
         getSha256Sum(cis, 0));
 
-    if (!isSecureEndpoint) return;
+    if (!isSecureEndpoint || skipSseTests) return;
 
     testGetObject(
         "[single upload, SSE-C]",
@@ -987,7 +987,7 @@ public class TestMinioClient extends TestArgs {
             .filename(baseName + ".downloaded")
             .build());
 
-    if (!isSecureEndpoint) return;
+    if (!isSecureEndpoint || skipSseTests) return;
 
     objectName = getRandomName();
     testDownloadObject(
@@ -1159,7 +1159,7 @@ public class TestMinioClient extends TestArgs {
         SSE_S3,
         RemoveObjectArgs.builder().bucket(bucketName).object(getRandomName()).build());
 
-    if (!isSecureEndpoint) {
+    if (!isSecureEndpoint || skipSseTests) {
       mintIgnoredLog(methodName, "[SSE-C]", System.currentTimeMillis());
       mintIgnoredLog(methodName, "[SSE-KMS]", System.currentTimeMillis());
       return;
@@ -1713,7 +1713,7 @@ public class TestMinioClient extends TestArgs {
             .build(),
         false);
 
-    if (!isSecureEndpoint) {
+    if (!isSecureEndpoint || skipSseTests) {
       mintIgnoredLog(methodName, "[SSE-C]", System.currentTimeMillis());
       mintIgnoredLog(methodName, "[SSE-KMS]", System.currentTimeMillis());
       return;
@@ -1849,7 +1849,7 @@ public class TestMinioClient extends TestArgs {
 
     if (isQuickTest) return;
 
-    if (!isSecureEndpoint) return;
+    if (!isSecureEndpoint || skipSseTests) return;
 
     testComposeObject(
         "[two SSE-C multipart sources]",

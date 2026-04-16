@@ -107,6 +107,7 @@ public class TestArgs {
   public String secretKey;
   public String region;
   public boolean isSecureEndpoint = false;
+  public boolean skipSseTests = false;
   public String sqsArn = null;
   public ServerSideEncryption sseKms = null;
 
@@ -118,6 +119,7 @@ public class TestArgs {
     this.secretKey = args.secretKey;
     this.region = args.region;
     this.isSecureEndpoint = args.isSecureEndpoint;
+    this.skipSseTests = args.skipSseTests;
     this.sqsArn = args.sqsArn;
     this.sseKms = args.sseKms;
   }

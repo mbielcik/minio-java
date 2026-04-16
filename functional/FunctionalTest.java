@@ -66,19 +66,21 @@ public class FunctionalTest {
     String accessKey = null;
     String secretKey = null;
     String region = null;
-    if (args.length == 4) {
+    boolean skipSseTests = null;
+    if (args.length == 5) {
       endpoint = args[0];
       accessKey = args[1];
       secretKey = args[2];
       region = args[3];
+      skipSseTests = args[4];
     }
-    TestArgs testArgs = new TestArgs(endpoint, accessKey, secretKey, region);
+    TestArgs testArgs = new TestArgs(endpoint, accessKey, secretKey, region, skipSseTests);
 
     Process minioProcess = null;
     Process minioProcessTLS = null;
-    if (args.length != 4) {
+    if (args.length != 5) {
       if (!TestArgs.downloadMinioServer()) {
-        System.out.println("usage: FunctionalTest <ENDPOINT> <ACCESSKEY> <SECRETKEY> <REGION>");
+        System.out.println("usage: FunctionalTest <ENDPOINT> <ACCESSKEY> <SECRETKEY> <REGION> <SKIP_SSE_TESTS>");
         System.exit(-1);
       }
 
@@ -86,7 +88,7 @@ public class FunctionalTest {
       try {
         int exitValue = minioProcess.exitValue();
         System.out.println("minio server process exited with " + exitValue);
-        System.out.println("usage: FunctionalTest <ENDPOINT> <ACCESSKEY> <SECRETKEY> <REGION>");
+        System.out.println("usage: FunctionalTest <ENDPOINT> <ACCESSKEY> <SECRETKEY> <REGION> <SKIP_SSE_TESTS>");
         System.exit(-1);
       } catch (IllegalThreadStateException e) {
         TestArgs.ignore();
@@ -96,7 +98,7 @@ public class FunctionalTest {
       try {
         int exitValue = minioProcessTLS.exitValue();
         System.out.println("minio server process exited with " + exitValue);
-        System.out.println("usage: FunctionalTest <ENDPOINT> <ACCESSKEY> <SECRETKEY> <REGION>");
+        System.out.println("usage: FunctionalTest <ENDPOINT> <ACCESSKEY> <SECRETKEY> <REGION> <SKIP_SSE_TESTS>");
         System.exit(-1);
       } catch (IllegalThreadStateException e) {
         TestArgs.ignore();
