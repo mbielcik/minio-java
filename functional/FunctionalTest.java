@@ -66,13 +66,13 @@ public class FunctionalTest {
     String accessKey = null;
     String secretKey = null;
     String region = null;
-    boolean skipSseTests = null;
+    boolean skipSseTests = false;
     if (args.length == 5) {
       endpoint = args[0];
       accessKey = args[1];
       secretKey = args[2];
       region = args[3];
-      skipSseTests = args[4];
+      skipSseTests = Boolean.parseBoolean(args[4]);
     }
     TestArgs testArgs = new TestArgs(endpoint, accessKey, secretKey, region, skipSseTests);
 

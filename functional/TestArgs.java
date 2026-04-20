@@ -124,7 +124,7 @@ public class TestArgs {
     this.sseKms = args.sseKms;
   }
 
-  public TestArgs(String endpoint, String accessKey, String secretKey, String region)
+  public TestArgs(String endpoint, String accessKey, String secretKey, String region, boolean skipSseTests)
       throws MinioException {
     this.automated = endpoint == null;
 
@@ -145,6 +145,7 @@ public class TestArgs {
       this.accessKey = accessKey;
       this.secretKey = secretKey;
       this.region = region;
+      this.skipSseTests = skipSseTests;
     }
     this.isSecureEndpoint = this.endpoint.toLowerCase(Locale.US).contains("https://");
 
