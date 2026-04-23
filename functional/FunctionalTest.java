@@ -72,7 +72,7 @@ public class FunctionalTest {
       accessKey = args[1];
       secretKey = args[2];
       region = args[3];
-      skipSseTests = Boolean.parseBoolean(args[4]);
+      skipSseTests = Integer.parseInt(args[4]) == 1;;
     }
     TestArgs testArgs = new TestArgs(endpoint, accessKey, secretKey, region, skipSseTests);
 
