@@ -67,6 +67,7 @@ public class TestArgs {
   public static final boolean MINT_ENV;
   public static final boolean IS_QUICK_TEST;
   public static final boolean IS_RUN_ON_FAIL;
+  public static final boolean SKIP_SSE_TESTS;
   public static final Path DATA_FILE_1KB;
   public static final Path DATA_FILE_6MB;
   public static final String REPLICATION_SRC_BUCKET;
@@ -87,6 +88,8 @@ public class TestArgs {
     MINT_ENV = mintMode != null;
     IS_QUICK_TEST = MINT_ENV && !"full".equals(mintMode);
     IS_RUN_ON_FAIL = MINT_ENV && "1".equals(System.getenv("RUN_ON_FAIL"));
+    SKIP_SSE_TESTS = System.getenv("SKIP_SSE_TESTS") != null && System.getenv("SKIP_SSE_TESTS").equals("1");
+
     DATA_FILE_1KB =
         (MINT_ENV && dataDir != null && !dataDir.isEmpty())
             ? Paths.get(dataDir, "datafile-1-kB")
