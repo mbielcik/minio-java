@@ -1843,6 +1843,7 @@ public class TestMinioClient extends TestArgs {
     if (isQuickTest) return;
 
     if (!isSecureEndpoint || SKIP_SSE_TESTS) {
+      String methodName = "composeObject()";
       mintIgnoredLog(methodName, "[SSE-C]", System.currentTimeMillis());
       mintIgnoredLog(methodName, "[SSE-KMS]", System.currentTimeMillis());
       return;
